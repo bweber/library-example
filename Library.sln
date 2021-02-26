@@ -1,0 +1,107 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.API", "Library.API\Library.API.csproj", "{7AB04307-6C49-494E-B073-333341A85B84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Common", "Library.Common\Library.Common.csproj", "{4A1A639E-5EB1-42E0-9502-7F518B3D3D93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Books", "Library.Books\Library.Books.csproj", "{61D10524-9015-40F5-9703-898CA890DFE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Authors", "Library.Authors\Library.Authors.csproj", "{241808CE-708D-4B26-82B4-98C7C894FA59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{B9AC64E5-2B2E-4BFA-B884-2B8FD74141CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2B0415B1-259B-4A3C-9079-CF42B3CA33DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.IntegrationTests", "Library.IntegrationTests\Library.IntegrationTests.csproj", "{5FF48059-5790-4066-A519-CCD6CBCB867D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.AcceptanceTests", "Library.AcceptanceTests\Library.AcceptanceTests.csproj", "{41D3DE50-8E07-405C-AA8A-6B4027F887A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2CC5AB6F-38D4-483F-9283-C45897743853}"
+ProjectSection(SolutionItems) = preProject
+	docker-compose.yml = docker-compose.yml
+	makefile = makefile
+	README.md = README.md
+	.gitignore = .gitignore
+				.dockerignore = .dockerignore
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{D99DAFC6-C41A-4149-92D9-C084A805D17D}"
+ProjectSection(SolutionItems) = preProject
+	scripts\acceptance.sh = scripts\acceptance.sh
+	scripts\build.sh = scripts\build.sh
+	scripts\dependencycheck.sh = scripts\dependencycheck.sh
+	scripts\serviceup.sh = scripts\serviceup.sh
+	scripts\integration.sh = scripts\integration.sh
+	scripts\startdocker.sh = scripts\startdocker.sh
+	scripts\startlocal.sh = scripts\startlocal.sh
+	scripts\stopdocker.sh = scripts\stopdocker.sh
+	scripts\stopservice.sh = scripts\stopservice.sh
+	scripts\verify.sh = scripts\verify.sh
+	scripts\setupinfra.sh = scripts\setupinfra.sh
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipeline", "Pipeline", "{437C4E12-5833-4F4C-9038-105AC0E85D50}"
+ProjectSection(SolutionItems) = preProject
+	.github\workflows\pull-request.yml = .github\workflows\pull-request.yml
+	.github\workflows\verify.yml = .github\workflows\verify.yml
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Infrastructure", "Library.Infrastructure\Library.Infrastructure.csproj", "{B9BADE40-35AA-4A3A-BADA-ED99D8618304}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DB", "DB", "{84525B7D-B4ED-44A1-A748-BE19E90C5478}"
+ProjectSection(SolutionItems) = preProject
+	db\configure-db.sh = db\configure-db.sh
+	db\Dockerfile = db\Dockerfile
+	db\entrypoint.sh = db\entrypoint.sh
+	db\setup.sql = db\setup.sql
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Checks", "Checks", "{A27EB931-8E49-4559-B11F-4D7988B30177}"
+ProjectSection(SolutionItems) = preProject
+	scripts\checks\dockercheck.sh = scripts\checks\dockercheck.sh
+	scripts\checks\dockercomposecheck.sh = scripts\checks\dockercomposecheck.sh
+	scripts\checks\dotnetcheck.sh = scripts\checks\dotnetcheck.sh
+EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7AB04307-6C49-494E-B073-333341A85B84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AB04307-6C49-494E-B073-333341A85B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AB04307-6C49-494E-B073-333341A85B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AB04307-6C49-494E-B073-333341A85B84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A1A639E-5EB1-42E0-9502-7F518B3D3D93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A1A639E-5EB1-42E0-9502-7F518B3D3D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A1A639E-5EB1-42E0-9502-7F518B3D3D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A1A639E-5EB1-42E0-9502-7F518B3D3D93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61D10524-9015-40F5-9703-898CA890DFE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D10524-9015-40F5-9703-898CA890DFE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D10524-9015-40F5-9703-898CA890DFE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61D10524-9015-40F5-9703-898CA890DFE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{241808CE-708D-4B26-82B4-98C7C894FA59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{241808CE-708D-4B26-82B4-98C7C894FA59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{241808CE-708D-4B26-82B4-98C7C894FA59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{241808CE-708D-4B26-82B4-98C7C894FA59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FF48059-5790-4066-A519-CCD6CBCB867D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF48059-5790-4066-A519-CCD6CBCB867D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FF48059-5790-4066-A519-CCD6CBCB867D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FF48059-5790-4066-A519-CCD6CBCB867D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41D3DE50-8E07-405C-AA8A-6B4027F887A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41D3DE50-8E07-405C-AA8A-6B4027F887A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41D3DE50-8E07-405C-AA8A-6B4027F887A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41D3DE50-8E07-405C-AA8A-6B4027F887A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9BADE40-35AA-4A3A-BADA-ED99D8618304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9BADE40-35AA-4A3A-BADA-ED99D8618304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9BADE40-35AA-4A3A-BADA-ED99D8618304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9BADE40-35AA-4A3A-BADA-ED99D8618304}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5FF48059-5790-4066-A519-CCD6CBCB867D} = {2B0415B1-259B-4A3C-9079-CF42B3CA33DF}
+		{41D3DE50-8E07-405C-AA8A-6B4027F887A0} = {2B0415B1-259B-4A3C-9079-CF42B3CA33DF}
+		{B9BADE40-35AA-4A3A-BADA-ED99D8618304} = {B9AC64E5-2B2E-4BFA-B884-2B8FD74141CD}
+		{A27EB931-8E49-4559-B11F-4D7988B30177} = {D99DAFC6-C41A-4149-92D9-C084A805D17D}
+	EndGlobalSection
+EndGlobal
