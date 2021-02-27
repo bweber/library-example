@@ -21,7 +21,7 @@ services:
       context: db
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: adminpassword123!
+      MSSQL_SA_PASSWORD: adminpassword123!
       MSSQL_DB: Library
       MSSQL_USER: libraryuser
       MSSQL_PASSWORD: librarypassword123!
