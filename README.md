@@ -32,6 +32,7 @@ An example application showing how to use Pulumi, Docker, and Github Actions
 1. Create a new access token
 1. Copy the generated access token
 1. Create a new Github secret called `PULUMI_ACCESS_TOKEN` with the copied value
+1. Add the Pulumi Bot to your Github org: https://www.pulumi.com/docs/guides/continuous-delivery/github-actions/
 
 ## Azure Setup
 1. Ensure you have Azure CLI installed via the dependencies list above
