@@ -13,7 +13,7 @@ services:
       - db
     environment:
       - ASPNETCORE_ENVIRONMENT=Acceptance
-      - ConnectionStrings__LibraryDB=Server=db;Database=Library;User Id=libraryuser;Password=librarypassword123!;
+      - ConnectionStrings__LibraryDB=Server=db;Database=Library;User Id=sa;Password=password123!;
   
   db:
     container_name: library-db
@@ -21,9 +21,7 @@ services:
       context: db
     environment:
       ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD: adminpassword123!
+      MSSQL_SA_PASSWORD: password123!
       MSSQL_DB: Library
-      MSSQL_USER: libraryuser
-      MSSQL_PASSWORD: librarypassword123!
     ports:
       - 1533:1433

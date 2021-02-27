@@ -5,7 +5,7 @@ namespace Library.AcceptanceTests.Utilities
 {
     public static class ConnectionFactory
     {
-        private const string ConnectionString = "Server=localhost,1533;Database=Library;User Id=libraryuser;Password=librarypassword123!;";
+        private const string ConnectionString = "Server=localhost,1533;Database=Library;User Id=sa;Password=password123!;";
 
         public static IDbConnection GetConnection()
         {

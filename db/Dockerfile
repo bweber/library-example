@@ -18,4 +18,4 @@ ENTRYPOINT ["./entrypoint.sh"]
 # Tail the setup logs to trap the process
 CMD ["tail -f /dev/null"]
 
-HEALTHCHECK --interval=15s CMD /opt/mssql-tools/bin/sqlcmd -U $MSSQL_USER -P $MSSQL_PASSWORD -d $MSSQL_DB -Q "select 1" && grep -q "MSSQL CONFIG COMPLETE" ./config.log
+HEALTHCHECK --interval=15s CMD /opt/mssql-tools/bin/sqlcmd -U sa -P $MSSQL_SA_PASSWORD -d $MSSQL_DB -Q "select 1" && grep -q "MSSQL CONFIG COMPLETE" ./config.log

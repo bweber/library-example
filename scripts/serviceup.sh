@@ -5,7 +5,7 @@ GREEN="\033[1;32m"
 NOCOLOR="\033[0m"
 
 i=0
-timeout=30000
+timeout=60000
 
 # continue until $n equals 5
 while [ $i -le $timeout ]
