@@ -76,7 +76,7 @@ namespace Library.API
             MigrateLibraryDB(context, logger, 20);
         }
         
-        private static void MigrateLibraryDB(LibraryDBContext context, ILogger<Startup> logger, int retriesRemaining)
+        private static void MigrateLibraryDB(DbContext context, ILogger logger, int retriesRemaining)
         {
             try
             {
