@@ -1,12 +1,10 @@
-﻿using System;
+﻿using System.Threading.Tasks;
+using Pulumi;
 
 namespace Library.Infrastructure
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-        }
+        private static Task<int> Main() => Deployment.RunAsync<APIStack>();
     }
 }

@@ -33,4 +33,34 @@ jobs:
 
           docker push docker.pkg.github.com/${{ github.repository }}/library-api:latest
           docker push docker.pkg.github.com/${{ github.repository }}/library-api:${{ github.sha }}
+          
+  deploy-dev:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Setup Pulumi CLI
+        uses: pulumi/action-install-pulumi-cli@v1.0.1
+
+      - name: Login via Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Infrastructure
+        run: make setup-infra
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_ARM_SUBSCRIPTION_ID }}
+          PULUMI_STACK: dev
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         
