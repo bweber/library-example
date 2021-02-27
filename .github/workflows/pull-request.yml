@@ -19,10 +19,5 @@ jobs:
       - name: Setup Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
 
-      - name: Login via Azure CLI
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: Verify
         run: make verify
