@@ -25,4 +25,6 @@ do
 done
 
 echo 'Health check did not pass within timeout'
+docker ps -a
+docker logs library-api
 exit 1
