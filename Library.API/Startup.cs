@@ -73,7 +73,7 @@ namespace Library.API
                 });
             
             using var context = createLibraryDBContext();
-            MigrateLibraryDB(context, logger, 15);
+            MigrateLibraryDB(context, logger, 20);
         }
         
         private static void MigrateLibraryDB(LibraryDBContext context, ILogger<Startup> logger, int retriesRemaining)
@@ -88,7 +88,7 @@ namespace Library.API
                 if (retriesRemaining == 0)
                     throw;
 
-                Thread.Sleep(2000);
+                Thread.Sleep(3000);
                 MigrateLibraryDB(context, logger, retriesRemaining - 1);
             }
         }
