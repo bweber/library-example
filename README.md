@@ -25,6 +25,15 @@ An example application showing how to use Pulumi, Docker, and Github Actions
 1. Run `make stop-service` when complete
 1. Launch the application via Rider/Visual Studio/VS Code
 
+## GitHub Setup
+GitHub requires a personal access token to pull images from its package registry.
+1. Visit [GitHub Tokens page](https://github.com/settings/tokens)
+1. Click `Generate new token`
+1. Select `read:packages` and give it a meaningful name
+1. Click `Generate token`
+1. Copy the value (this will not be available again)
+1. Go to your repository settings and create a new secret called `LIBRARY_PAT` and paste the value of the token created
+
 ## Pulumi Setup
 1. Ensure you have Pulumi installed via the dependencies list above
 1. Create a new account on [Pulumi](https://www.pulumi.com/)
