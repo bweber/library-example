@@ -20,8 +20,8 @@ else
   echo $APP_SERVICE_NAME
   echo $APP_SERVICE_URL
   
-  echo '::set-output name=appServiceName::$APP_SERVICE_NAME'
-  echo '::set-output name=appServiceUrl::$APP_SERVICE_URL'
+  echo "::set-output name=appServiceName::$APP_SERVICE_NAME"
+  echo "::set-output name=appServiceUrl::$APP_SERVICE_URL"
 fi
 
 result=$?
