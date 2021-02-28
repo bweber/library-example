@@ -19,9 +19,10 @@ jobs:
       - name: Setup Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
 
-      - name: Load Docker Cache
-        uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
+      - uses: whoan/docker-build-with-cache-action@v5
+        with:
+          image_name: mcr.microsoft.com/mssql/server:2019-latest
+          push_image_and_stages: false
 
       - name: Verify
         run: make verify
