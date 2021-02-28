@@ -100,6 +100,7 @@ namespace Library.Infrastructure
                 AppSettings =
                 {
                     { "WEBSITES_ENABLE_APP_SERVICE_STORAGE", "false" },
+                    { "WEBSITES_CONTAINER_START_TIME_LIMIT", "1800" },
                     { "ASPNETCORE_ENVIRONMENT", config.Require("aspnetEnvironment") },
                     { "APPINSIGHTS_INSTRUMENTATIONKEY", appInsights.InstrumentationKey },
                     { "KeyVaultName", vault.Name }
@@ -178,27 +179,30 @@ namespace Library.Infrastructure
                     { "environment", Deployment.Instance.StackName }
                 }
             });
+
+            var connectionString =
+                Output.Format($"Server=tcp:{sqlServer.Name}.database.windows.net;Database={database.Name};User Id={adminUsername.Result};Password={adminPassword.Result};");
             
             var connectionSecret = new Secret("library-sql-connection-string", new SecretArgs
             {
                 Name = "ConnectionStrings--LibraryDB",
                 KeyVaultId = vault.Id,
-                Value = Output.Format($"Server=tcp:{sqlServer.Name}.database.windows.net;Database={database.Name};"),
+                Value = connectionString,
                 Tags =
                 {
                     { "environment", Deployment.Instance.StackName }
                 }
             });
             
-            var librarySqlAdmin = new ActiveDirectoryAdministrator("library-admin", new ActiveDirectoryAdministratorArgs
+            // Allow app service access to the database: https://docs.microsoft.com/en-us/rest/api/sql/firewallrules/createorupdate
+            var appServiceFirewall = new FirewallRule($"library-app-firewall", new FirewallRuleArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                TenantId = tenantId,
-                ObjectId = appServicePrincipalId,
-                Login = "libraryadmin",
-                ServerName = sqlServer.Name
+                ServerName = sqlServer.Name,
+                StartIpAddress = "0.0.0.0",
+                EndIpAddress = "0.0.0.0"
             });
-
+            
             AppServiceName = appService.Name;
             Endpoint = Output.Format($"https://{appService.DefaultSiteHostname}");
         }
