@@ -34,7 +34,7 @@ namespace Library.IntegrationTests.Authors
             Assert.True(getResponse.IsSuccessStatusCode);
             Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
 
-            var retrievedAuthor = await insertResponse.Content.ReadFromJsonAsync<AuthorModel>();
+            var retrievedAuthor = await getResponse.Content.ReadFromJsonAsync<AuthorModel>();
             Assert.NotNull(retrievedAuthor);
             Assert.Equal(insertedAuthor.Id, retrievedAuthor.Id);
             Assert.Equal(model.FirstName, retrievedAuthor.FirstName);
@@ -48,8 +48,8 @@ namespace Library.IntegrationTests.Authors
             };
             
             var updateResponse = await ApiHelper.Put($"authors/{updatedModel.Id}", updatedModel);
-            Assert.True(getResponse.IsSuccessStatusCode);
-            Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+            Assert.True(updateResponse.IsSuccessStatusCode);
+            Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
             
             var updatedAuthor = await updateResponse.Content.ReadFromJsonAsync<AuthorModel>();
             Assert.NotNull(updatedAuthor);

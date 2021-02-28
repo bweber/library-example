@@ -50,7 +50,7 @@ namespace Library.IntegrationTests.Books
             Assert.True(getResponse.IsSuccessStatusCode);
             Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
 
-            var retrievedBook = await insertResponse.Content.ReadFromJsonAsync<BookModel>();
+            var retrievedBook = await getResponse.Content.ReadFromJsonAsync<BookModel>();
             Assert.NotNull(retrievedBook);
             Assert.Equal(insertedBook.Id, retrievedBook.Id);
             Assert.Equal(model.Title, retrievedBook.Title);
@@ -73,8 +73,8 @@ namespace Library.IntegrationTests.Books
             };
             
             var updateResponse = await ApiHelper.Put($"books/{updatedModel.Id}", updatedModel);
-            Assert.True(getResponse.IsSuccessStatusCode);
-            Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+            Assert.True(updateResponse.IsSuccessStatusCode);
+            Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
             
             var updatedBook = await updateResponse.Content.ReadFromJsonAsync<BookModel>();
             Assert.NotNull(updatedBook);
