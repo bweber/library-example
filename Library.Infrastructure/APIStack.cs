@@ -13,6 +13,12 @@ namespace Library.Infrastructure
 {
     public class APIStack : Stack
     {
+        [Output("appServiceName")]
+        public Output<string> AppServiceName { get; set; }
+        
+        [Output("appServiceUrl")]
+        public Output<string> Endpoint { get; set; }
+        
         public APIStack()
         {
             var stackName = Deployment.Instance.StackName;
@@ -192,6 +198,9 @@ namespace Library.Infrastructure
                 Login = "libraryadmin",
                 ServerName = sqlServer.Name
             });
+
+            AppServiceName = appService.Name;
+            Endpoint = Output.Format($"https://{appService.DefaultSiteHostname}");
         }
     }
 }
