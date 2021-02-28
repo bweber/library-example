@@ -35,6 +35,9 @@ namespace Library.Infrastructure.Modules
                 {
                     { "environment", Deployment.Instance.StackName }
                 }
+            }, new CustomResourceOptions
+            {
+                Protect = true
             });
 
             var database = new Database($"{name}-db", new DatabaseArgs
@@ -48,6 +51,9 @@ namespace Library.Infrastructure.Modules
                 {
                     { "environment", Deployment.Instance.StackName }
                 }
+            }, new CustomResourceOptions
+            {
+                Protect = true
             });
 
             var connectionString =
