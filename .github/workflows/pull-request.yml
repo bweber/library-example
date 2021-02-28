@@ -19,6 +19,10 @@ jobs:
       - name: Setup Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
 
+      - name: Load Docker Cache
+        uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
       - name: Verify
         run: make verify
         
