@@ -13,6 +13,14 @@ if [ "$IS_PR_WORKFLOW" = true ] ; then
   pulumi preview
 else
   pulumi up -y
+  
+  APP_SERVICE_NAME=$(pulumi stack output appServiceName)
+  APP_SERVICE_URL=$(pulumi stack output appServiceUrl)
+  
+  echo '::set-output name=appServiceName::${APP_SERVICE_NAME}'
+  echo '::set-output name=appServiceUrl::${APP_SERVICE_URL}'
+
+  echo $API_URL
 fi
 
 result=$?

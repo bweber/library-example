@@ -63,6 +63,8 @@ ProjectSection(SolutionItems) = preProject
 	scripts\checks\dotnetcheck.sh = scripts\checks\dotnetcheck.sh
 EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Infrastructure.Tests", "Library.Infrastructure.Tests\Library.Infrastructure.Tests.csproj", "{CA86B38F-BE98-40A8-926F-F8D0074D9D94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,11 +99,16 @@ Global
 		{B9BADE40-35AA-4A3A-BADA-ED99D8618304}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9BADE40-35AA-4A3A-BADA-ED99D8618304}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9BADE40-35AA-4A3A-BADA-ED99D8618304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA86B38F-BE98-40A8-926F-F8D0074D9D94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA86B38F-BE98-40A8-926F-F8D0074D9D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA86B38F-BE98-40A8-926F-F8D0074D9D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA86B38F-BE98-40A8-926F-F8D0074D9D94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5FF48059-5790-4066-A519-CCD6CBCB867D} = {2B0415B1-259B-4A3C-9079-CF42B3CA33DF}
 		{41D3DE50-8E07-405C-AA8A-6B4027F887A0} = {2B0415B1-259B-4A3C-9079-CF42B3CA33DF}
 		{B9BADE40-35AA-4A3A-BADA-ED99D8618304} = {B9AC64E5-2B2E-4BFA-B884-2B8FD74141CD}
 		{A27EB931-8E49-4559-B11F-4D7988B30177} = {D99DAFC6-C41A-4149-92D9-C084A805D17D}
+		{CA86B38F-BE98-40A8-926F-F8D0074D9D94} = {B9AC64E5-2B2E-4BFA-B884-2B8FD74141CD}
 	EndGlobalSection
 EndGlobal

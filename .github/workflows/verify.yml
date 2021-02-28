@@ -49,18 +49,52 @@ jobs:
       - name: Setup Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
 
+      - name: Deploy Infrastructure
+        id: deploy-infra
+        run: make setup-infra
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          PULUMI_STACK: dev
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          
       - name: Login via Azure CLI
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Set Web App Container Settings
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: ${{ steps.deploy-infra.outputs.appServiceName }}
+          app-settings-json: |
+            [
+                {
+                    "name": "DOCKER_REGISTRY_SERVER_URL",
+                    "value": "docker.pkg.github.com/${{ github.repository }}",
+                    "slotSetting": false
+                },
+                {
+                    "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                    "value": "${{ github.repository_owner }}",
+                    "slotSetting": false
+                },
+                {
+                    "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                    "value": "${{ secrets.GITHUB_TOKEN }}",
+                    "slotSetting": false
+                }
+            ]
+            
+      - name: Deploy Application to Dev
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ steps.deploy-infra.outputs.appServiceName }}
+          images: docker.pkg.github.com/${{ github.repository }}/library-api:${{ github.sha }}
 
-      - name: Deploy Infrastructure
-        run: make setup-infra
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_ARM_CLIENT_SECRET }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_ARM_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_ARM_SUBSCRIPTION_ID }}
-          PULUMI_STACK: dev
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      - name: Azure logout
+        run: |
+          az logout
         
