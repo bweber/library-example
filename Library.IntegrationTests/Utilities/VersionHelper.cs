@@ -14,7 +14,7 @@ namespace Library.IntegrationTests.Utilities
 
             await Policy
                 .Handle<AssertActualExpectedException>()
-                .WaitAndRetryAsync(24, _ => TimeSpan.FromSeconds(5)) // Wait 2 minutes
+                .WaitAndRetryAsync(60, _ => TimeSpan.FromSeconds(5)) // Wait 5 minutes
                 .ExecuteAsync(async () =>
                 {
                     var response = await ApiHelper.Get("version");
