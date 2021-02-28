@@ -54,6 +54,7 @@ namespace Library.API
             }
 
             app.UseCorrelationId()
+                .UseHttpsRedirection()
                 .UseRouting()
                 .UseAuthentication()
                 .UseAuthorization()
