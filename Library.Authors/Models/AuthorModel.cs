@@ -1,6 +1,6 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using FluentValidation;
 
 namespace Library.Authors.Models
 {
@@ -9,14 +9,24 @@ namespace Library.Authors.Models
         [JsonPropertyName("id")]
         public Guid? Id { get; set; }
         
-        [Required(ErrorMessage = "first_name is required")]
-        [MaxLength(100, ErrorMessage = "first_name has a maximum length of 100")]
         [JsonPropertyName("first_name")]
         public string FirstName { get; set; }
         
-        [Required(ErrorMessage = "last_name is required")]
-        [MaxLength(100, ErrorMessage = "last_name has a maximum length of 100")]
         [JsonPropertyName("last_name")]
         public string LastName { get; set; }
+    }
+    
+    public class AuthorModelValidator : AbstractValidator<AuthorModel> 
+    {
+        public AuthorModelValidator() 
+        {
+            RuleFor(x => x.FirstName)
+                .NotNull().WithMessage("first_name is required")
+                .MaximumLength(100).WithMessage("first_name has a maximum length of 100");
+            
+            RuleFor(x => x.LastName)
+                .NotNull().WithMessage("last_name is required")
+                .MaximumLength(100).WithMessage("last_name has a maximum length of 100");
+        }
     }
 }
