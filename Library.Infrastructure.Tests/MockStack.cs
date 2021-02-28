@@ -37,13 +37,17 @@ namespace Library.Infrastructure.Tests
                     break;
                 case "azure:appservice/appService:AppService":
                 {
-                    var identity = (ImmutableDictionary<string, object>) outputs["identity"];
-                    var identityCopy = ImmutableDictionary.CreateBuilder<string, object>();
+                    if (outputs.ContainsKey("identity"))
+                    {
+                        var identity = (ImmutableDictionary<string, object>) outputs["identity"];
+                        var identityCopy = ImmutableDictionary.CreateBuilder<string, object>();
 
-                    identityCopy.AddRange(identity);
-                    identityCopy.Add("principalId", "MyAppIdentity");
+                        identityCopy.AddRange(identity);
+                        identityCopy.Add("principalId", "MyAppIdentity");
 
-                    outputs["identity"] = identityCopy;
+                        outputs["identity"] = identityCopy;
+                    }
+                    
                     break;
                 }
                 case "random:index/randomString:RandomString":

@@ -21,8 +21,6 @@ namespace Library.Common
                 });
             });
             
-            services.AddSingleton<Func<LibraryDBContext>>(serviceProvider => serviceProvider.GetRequiredService<LibraryDBContext>);
-            
             return services;
         }
     }
