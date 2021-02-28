@@ -106,8 +106,9 @@ namespace Library.Infrastructure.Tests.Tests
 
             var appSettings = await appService.AppSettings.GetValueAsync();
             Assert.NotNull(appSettings);
-            Assert.Equal(4, appSettings.Count);
+            Assert.Equal(5, appSettings.Count);
             Assert.Equal("false", appSettings["WEBSITES_ENABLE_APP_SERVICE_STORAGE"]);
+            Assert.Equal("1800", appSettings["WEBSITES_CONTAINER_START_TIME_LIMIT"]);
             Assert.Equal(_stackHelper.Config.AspnetEnvironment, appSettings["ASPNETCORE_ENVIRONMENT"]);
             Assert.Equal(instrumentationKey, appSettings["APPINSIGHTS_INSTRUMENTATIONKEY"]);
             Assert.Equal(keyVaultName, appSettings["KeyVaultName"]);

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pulumi.Azure.KeyVault;
 using Pulumi.Azure.Sql;
+using Pulumi.Random;
 using Xunit;
 
 namespace Library.Infrastructure.Tests.Tests
@@ -61,12 +62,22 @@ namespace Library.Infrastructure.Tests.Tests
 
             var databaseName = await database.Name.GetValueAsync();
             
+            var randomLogin = resources.OfType<RandomString>().FirstOrDefault();
+            Assert.NotNull(randomLogin);
+            
+            var randomAdminLogin = await randomLogin.Result.GetValueAsync();
+            
+            var randomPassword = resources.OfType<RandomPassword>().FirstOrDefault();
+            Assert.NotNull(randomPassword);
+            
+            var randomAdminPassword = await randomPassword.Result.GetValueAsync();
+            
             var secret = resources.OfType<Secret>().FirstOrDefault();
             Assert.NotNull(secret);
 
             var value = await secret.Value.GetValueAsync();
             Assert.NotNull(value);
-            Assert.Equal($"Server=tcp:{sqlServerName}.database.windows.net;Database={databaseName};", value);
+            Assert.Equal($"Server=tcp:{sqlServerName}.database.windows.net;Database={databaseName};User Id={randomAdminLogin};Password={randomAdminPassword};", value);
         }
         
         [Fact]
