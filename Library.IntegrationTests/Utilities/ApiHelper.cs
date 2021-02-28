@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace Library.IntegrationTests.Utilities
 {
     public static class ApiHelper
     {
-        public const string BaseApiUrl = "https://library-api-example.azurewebsites.com";
+        public static string BaseApiUrl = Environment.GetEnvironmentVariable("LIBRARY_API_URL");
         
         public static async Task<HttpResponseMessage> Get(string route)
         {

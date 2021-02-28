@@ -99,4 +99,10 @@ jobs:
       - name: Azure logout
         run: |
           az logout
+          
+      - name: Smoke Test
+        run: make integration
+        env:
+          LIBRARY_API_URL: ${{ steps.deploy-infra.outputs.appServiceUrl }}
+          GIT_HASH: ${{ github.sha }}
         
