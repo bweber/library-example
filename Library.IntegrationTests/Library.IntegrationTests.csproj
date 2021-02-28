@@ -20,4 +20,9 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Library.Authors\Library.Authors.csproj" />
+      <ProjectReference Include="..\Library.Books\Library.Books.csproj" />
+    </ItemGroup>
+
 </Project>
