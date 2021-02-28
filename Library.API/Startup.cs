@@ -46,8 +46,7 @@ namespace Library.API
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                 });
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
-            Func<LibraryDBContext> createLibraryDBContext, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (!env.IsProduction())
             {
@@ -71,8 +70,9 @@ namespace Library.API
 
                     endpoints.MapControllers();
                 });
-            
-            using var context = createLibraryDBContext();
+
+            using var scope = app.ApplicationServices.CreateScope();
+            using var context = scope.ServiceProvider.GetService<LibraryDBContext>();
             MigrateLibraryDB(context, logger, 20);
         }
         
