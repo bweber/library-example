@@ -2,6 +2,8 @@
 
 An example application showing how to use Pulumi, Docker, and Github Actions
 
+[![Verify](https://github.com/bweber/library-example/actions/workflows/verify.yml/badge.svg)](https://github.com/bweber/library-example/actions/workflows/verify.yml)
+
 ## Dependencies
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Docker Compose](https://www.docker.com/products/docker-desktop)
