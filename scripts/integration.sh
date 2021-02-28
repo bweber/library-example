@@ -17,7 +17,7 @@ cd $(dirname $0)/..
 
 echo "Running integration tests..."
 
-dotnet test Library.IntegrationTests/Library.IntegrationTests.csproj -c Release -v=normal
+dotnet test Library.IntegrationTests/Library.IntegrationTests.csproj -c Release --no-restore --no-build -v=normal
 
 result=$?
 
