@@ -22,16 +22,20 @@ namespace Library.Books.Models
         public Guid? AuthorId { get; set; }
     }
     
-    public class BookModelValidator : AbstractValidator<BookModel> {
-        public BookModelValidator(LibraryDBContext context) {
-            
-            RuleFor(x => x.Title).NotNull().WithMessage("title is required")
+    public class BookModelValidator : AbstractValidator<BookModel> 
+    {
+        public BookModelValidator(LibraryDBContext context) 
+        {
+            RuleFor(x => x.Title)
+                .NotNull().WithMessage("title is required")
                 .MaximumLength(250).WithMessage("title has a maximum length of 250");
             
-            RuleFor(x => x.Subject).NotNull().WithMessage("subject is required")
+            RuleFor(x => x.Subject)
+                .NotNull().WithMessage("subject is required")
                 .MaximumLength(250).WithMessage("subject has a maximum length of 250");
             
-            RuleFor(x => x.AuthorId).NotNull().WithMessage("author_id is required")
+            RuleFor(x => x.AuthorId)
+                .NotNull().WithMessage("author_id is required")
                 .SetValidator(new AuthorValidator(context)).WithMessage("author_id does not reference an existing author");
         }
     }
