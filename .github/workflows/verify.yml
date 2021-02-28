@@ -100,7 +100,7 @@ jobs:
         run: |
           az logout
           
-      - name: Smoke Test
+      - name: Integration Tests
         run: make integration
         env:
           LIBRARY_API_URL: ${{ steps.deploy-infra.outputs.appServiceUrl }}
