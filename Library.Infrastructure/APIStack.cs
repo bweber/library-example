@@ -195,7 +195,7 @@ namespace Library.Infrastructure
             });
             
             // Allow app service access to the database: https://docs.microsoft.com/en-us/rest/api/sql/firewallrules/createorupdate
-            var appServiceFirewall = new FirewallRule($"library-app-firewall", new FirewallRuleArgs
+            var appServiceFirewall = new FirewallRule("library-sql-fw", new FirewallRuleArgs
             {
                 ResourceGroupName = resourceGroup.Name,
                 ServerName = sqlServer.Name,
