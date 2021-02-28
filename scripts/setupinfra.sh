@@ -9,6 +9,10 @@ pulumi login
 (pulumi stack init $PULUMI_STACK) || echo "Pulumi $PULUMI_STACK already exists"
 pulumi stack select $PULUMI_STACK
 
+# Examples of setting configuration from CLI
+pulumi config set myConfig "My Config"
+pulumi config set --secret mySecret "My Secret"
+
 if [ "$IS_PR_WORKFLOW" = true ] ; then
   pulumi preview
 else
