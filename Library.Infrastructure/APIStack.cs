@@ -147,7 +147,7 @@ namespace Library.Infrastructure
                 Special = true
             });
             
-            var sqlServer = new SqlServer("library-sql-server", new SqlServerArgs
+            var sqlServer = new SqlServer("library-sqlserver", new SqlServerArgs
             {
                 ResourceGroupName = resourceGroup.Name,
                 Location = resourceGroup.Location,
@@ -160,7 +160,7 @@ namespace Library.Infrastructure
                 }
             });
 
-            var database = new Database("library-sql-database", new DatabaseArgs
+            var database = new Database("library-database", new DatabaseArgs
             {
                 Name = "Library",
                 ResourceGroupName = resourceGroup.Name,

@@ -50,6 +50,7 @@ jobs:
         uses: pulumi/action-install-pulumi-cli@v1.0.1
 
       - name: Deploy Infrastructure
+        id: deployInfraStep
         run: make setup-infra
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
