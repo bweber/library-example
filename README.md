@@ -25,6 +25,15 @@ An example application showing how to use Pulumi, Docker, and Github Actions
 1. Run `make stop-service` when complete
 1. Launch the application via Rider/Visual Studio/VS Code
 
+## Running Pulumi Locally
+Full set of CLI commands are available on the [Pulumi website ](https://www.pulumi.com/docs/reference/cli/)
+* Login: `pulumi login`
+* Logout: `pulumi logout`
+* Preview Changes: `pulumi preview`
+* Create Infrastructure: `pulumi up -y`
+* Destroy Infrastructure: `pulumi destroy`
+* Delete stack: `pulumi stack rm <STACK NAME>`
+
 ## GitHub Setup
 GitHub requires a personal access token to pull images from its package registry.
 1. Visit [GitHub Tokens page](https://github.com/settings/tokens)
