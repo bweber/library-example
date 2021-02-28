@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Library.Common.Extensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
@@ -30,15 +32,14 @@ namespace Library.API.Configuration
             {
                 options.PreSerializeFilters.Add((swaggerDoc, httpRequest) =>
                 {
-                    if (!httpRequest.Headers.ContainsKey("X-Forwarded-Host")) return;
+                    if (environment.IsAcceptance()) return;
 
-                    var serverUrl = $"{httpRequest.Headers["X-Forwarded-Proto"]}://" +
-                                    $"{httpRequest.Headers["X-Forwarded-Host"]}/" +
-                                    $"{httpRequest.Headers["X-Forwarded-Prefix"]}";
+                    var serverUrl = swaggerDoc.Servers.First();
+                    serverUrl.Url = serverUrl.Url.Replace("http", "https");
 
                     swaggerDoc.Servers = new List<OpenApiServer>
                     {
-                        new() { Url = serverUrl }
+                        serverUrl
                     };
                 });
             });
