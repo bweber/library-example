@@ -75,8 +75,3 @@ GitHub requires a personal access token to pull images from its package registry
     }
     ```
 1. Copy output to Github as a secret called `AZURE_CREDENTIALS`
-1. Copy the four parts of the output to Github secrets with respective names:
-    1. `ARM_CLIENT_ID`
-    1. `ARM_CLIENT_SECRET`
-    1. `ARM_SUBSCRIPTION_ID`
-    1. `ARM_TENANT_ID`
