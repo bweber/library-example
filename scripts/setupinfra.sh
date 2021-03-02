@@ -5,6 +5,36 @@ current_directory="$PWD"
 
 cd $(dirname $0)/../Library.Infrastructure
 
+if [[ -z "${AZURE_CREDENTIALS}" ]]; then
+    echo "AZURE_CREDENTIALS environment variable is not set"
+    exit 1
+fi
+
+export ARM_CLIENT_ID=$(echo $AZURE_CREDENTIALS | python3 -c "import sys, json; print(json.load(sys.stdin)['clientId'])")
+export ARM_CLIENT_SECRET=$(echo $AZURE_CREDENTIALS | python3 -c "import sys, json; print(json.load(sys.stdin)['clientSecret'])")
+export ARM_SUBSCRIPTION_ID=$(echo $AZURE_CREDENTIALS | python3 -c "import sys, json; print(json.load(sys.stdin)['subscriptionId'])")
+export ARM_TENANT_ID=$(echo $AZURE_CREDENTIALS | python3 -c "import sys, json; print(json.load(sys.stdin)['tenantId'])")
+
+if [[ -z "${ARM_CLIENT_ID}" ]]; then
+    echo "clientId could not be parsed from AZURE_CREDENTIALS"
+    exit 1
+fi
+
+if [[ -z "${ARM_CLIENT_SECRET}" ]]; then
+    echo "clientSecret could not be parsed from AZURE_CREDENTIALS"
+    exit 1
+fi
+
+if [[ -z "${ARM_SUBSCRIPTION_ID}" ]]; then
+    echo "subscriptionId could not be parsed from AZURE_CREDENTIALS"
+    exit 1
+fi
+
+if [[ -z "${ARM_TENANT_ID}" ]]; then
+    echo "tenantId could not be parsed from AZURE_CREDENTIALS"
+    exit 1
+fi
+
 pulumi login
 (pulumi stack init $PULUMI_STACK) || echo "Pulumi $PULUMI_STACK already exists"
 pulumi stack select $PULUMI_STACK
