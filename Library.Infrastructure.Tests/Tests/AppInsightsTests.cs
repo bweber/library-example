@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Pulumi.Azure.AppInsights;
-using Pulumi.Azure.AppService;
 using Xunit;
 
 namespace Library.Infrastructure.Tests.Tests
