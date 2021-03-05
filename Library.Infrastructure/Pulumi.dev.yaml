@@ -2,7 +2,7 @@ config:
   azure:location: CentralUS
   library-api:appServicePlanTier: Basic
   library-api:appServicePlanSize: B1
-  library-api:appServiceCapacity: 1
+  library-api:appServiceCapacity: 2
   library-api:keyvaultSku: standard
   library-api:databaseSize: S0
   library-api:aspnetEnvironment: Development
