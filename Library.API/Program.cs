@@ -21,12 +21,12 @@ namespace Library.API
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     if (context.HostingEnvironment.IsAcceptance()) return;
-                
+
                     var builtConfig = config.Build();
                     var secretClient = new SecretClient(
-                        new Uri($"https://{builtConfig.GetValue<string>("KeyVaultName")}.vault.azure.net/"),
+                        new Uri(builtConfig.GetValue<string>("KeyVaultUri")),
                         new DefaultAzureCredential());
-                    
+
                     config.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
                 })
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });

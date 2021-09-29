@@ -14,11 +14,11 @@ namespace Library.Infrastructure.Modules
     {
         [Output("name")]
         public Output<string> Name { get; private set; }
-        
+
         [Output("defaultSiteHostname")]
         public Output<string> DefaultSiteHostname { get; private set; }
-        
-        public AppServiceModule(string name, AppServiceModuleArgs args, ComponentResourceOptions options = null, bool remote = false) 
+
+        public AppServiceModule(string name, AppServiceModuleArgs args, ComponentResourceOptions options = null, bool remote = false)
             : base("library:components:AppService", name, args, options, remote)
         {
             var appInsights = new Insights($"{name}-insights", new InsightsArgs
@@ -31,7 +31,7 @@ namespace Library.Infrastructure.Modules
                     { "environment", Deployment.Instance.StackName }
                 }
             });
-            
+
             var appService = new AppService(name, new AppServiceArgs
             {
                 Location = args.ResourceGroupLocation,
@@ -48,7 +48,7 @@ namespace Library.Infrastructure.Modules
                     { "WEBSITES_CONTAINER_START_TIME_LIMIT", "1800" },
                     { "ASPNETCORE_ENVIRONMENT", args.AspnetEnvironment },
                     { "APPINSIGHTS_INSTRUMENTATIONKEY", appInsights.InstrumentationKey },
-                    { "KeyVaultName", args.KeyVaultName }
+                    { "KeyVaultUri", Output.Format($"https://{args.KeyVaultName}.vault.azure.net/") }
                 },
                 SiteConfig = new AppServiceSiteConfigArgs
                 {
@@ -74,10 +74,10 @@ namespace Library.Infrastructure.Modules
                     }
                 }
             });
-            
+
             var appServicePrincipalId = appService.Identity.Apply(id =>
                 string.IsNullOrEmpty(id.PrincipalId) ? throw new ArgumentNullException() : id.PrincipalId);
-            
+
             new AccessPolicy($"{name}-policy", new AccessPolicyArgs
             {
                 KeyVaultId = args.KeyVaultId,
@@ -90,30 +90,30 @@ namespace Library.Infrastructure.Modules
             DefaultSiteHostname = appService.DefaultSiteHostname;
         }
     }
-    
-    public sealed class AppServiceModuleArgs : ResourceArgs 
+
+    public sealed class AppServiceModuleArgs : ResourceArgs
     {
         [Input("aspnetEnvironment")]
         public Input<string> AspnetEnvironment { get; set; } = null!;
-        
+
         [Input("appServicePlanId")]
         public Input<string> AppServicePlanId { get; set; } = null!;
-        
+
         [Input("tenantId")]
         public Input<string> TenantId { get; set; } = null!;
-        
+
         [Input("keyVaultId")]
         public Input<string> KeyVaultId { get; set; } = null!;
-        
+
         [Input("keyVaultName")]
         public Input<string> KeyVaultName { get; set; } = null!;
-        
+
         [Input("resourceGroupName")]
         public Input<string> ResourceGroupName { get; set; }
-        
+
         [Input("resourceGroupLocation")]
         public Input<string> ResourceGroupLocation { get; set; }
-        
+
         public AppServiceModuleArgs(ResourceGroup resourceGroup)
         {
             ResourceGroupName = resourceGroup.Name;
