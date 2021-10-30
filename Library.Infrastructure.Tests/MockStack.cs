@@ -17,17 +17,16 @@ namespace Library.Infrastructure.Tests
             _clientConfig = clientConfig;
         }
 
-        public Task<(string id, object state)> NewResourceAsync(
-            string type, string name, ImmutableDictionary<string, object> inputs, string provider, string id)
+        public Task<(string id, object state)> NewResourceAsync(MockResourceArgs args)
         {
             var outputs = ImmutableDictionary.CreateBuilder<string, object>();
 
-            outputs.AddRange(inputs);
-            
-            if (!inputs.ContainsKey("name"))
-                outputs.Add("name", name);
-            
-            switch (type)
+            outputs.AddRange(args.Inputs);
+
+            if (!args.Inputs.ContainsKey("name"))
+                outputs.Add("name", args.Name);
+
+            switch (args.Type)
             {
                 case "azure:core/resourceGroup:ResourceGroup":
                     outputs.Add("location", "CentralUS");
@@ -47,7 +46,7 @@ namespace Library.Infrastructure.Tests
 
                         outputs["identity"] = identityCopy;
                     }
-                    
+
                     break;
                 }
                 case "random:index/randomString:RandomString":
@@ -56,20 +55,20 @@ namespace Library.Infrastructure.Tests
                     break;
             }
 
-            return Task.FromResult(($"{name}_id", (object)outputs));
+            return Task.FromResult(($"{args.Name}_id", (object)outputs));
         }
 
-        public Task<object> CallAsync(string token, ImmutableDictionary<string, object> inputs, string provider)
+        public Task<object> CallAsync(MockCallArgs args)
         {
-            if (token == "azure:core/getClientConfig:getClientConfig")
+            if (args.Token == "azure:core/getClientConfig:getClientConfig")
             {
                 return Task.FromResult((object) _clientConfig);
             }
-            
-            return Task.FromResult((object)inputs);
+
+            return Task.FromResult((object)args.Args);
         }
     }
-    
+
     internal class MockStackHelper
     {
         public readonly MockConfig Config = new()
@@ -90,7 +89,7 @@ namespace Library.Infrastructure.Tests
         public Task<ImmutableArray<Resource>> TestAsync()
         {
             Environment.SetEnvironmentVariable("PULUMI_CONFIG", JsonConvert.SerializeObject(Config));
-            
+
             return Deployment.TestAsync<APIStack>(new MockStack(ClientConfig), new TestOptions { IsPreview = false, StackName = "dev", ProjectName = "library-api" });
         }
     }

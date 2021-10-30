@@ -14,7 +14,7 @@ namespace Library.Books.Services
         Task<BookModel> Update(BookModel bookModel);
         Task Delete(Guid id);
     }
-    
+
     public class BookService : IBookService
     {
         private readonly LibraryDBContext _context;
@@ -35,25 +35,25 @@ namespace Library.Books.Services
         public async Task<BookModel> Create(BookModel bookModel)
         {
             bookModel.Id ??= Guid.NewGuid();
-            
+
             var book = _mapper.Map<Book>(bookModel);
 
             await _context.AddAsync(book);
             await _context.SaveChangesAsync();
-            
+
             return bookModel;
         }
 
         public async Task<BookModel> Update(BookModel bookModel)
         {
             var existing = await _context.Books.FindAsync(bookModel.Id);
-            
+
             existing.Subject = bookModel.Subject;
             existing.Title = bookModel.Title;
             existing.AuthorId = bookModel.AuthorId.GetValueOrDefault();
-            
+
             await _context.SaveChangesAsync();
-            
+
             return bookModel;
         }
 

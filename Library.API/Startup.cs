@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json.Serialization;
 using System.Threading;
 using CorrelationId;
@@ -15,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Library.API
 {
@@ -29,7 +29,7 @@ namespace Library.API
             _environment = environment;
         }
 
-        public void ConfigureServices(IServiceCollection services) => 
+        public void ConfigureServices(IServiceCollection services) =>
             services
                 .AddApplicationInsightsTelemetry()
                 .ConfigureHealthChecks(_configuration)
@@ -54,6 +54,7 @@ namespace Library.API
             }
 
             app.UseCorrelationId()
+                .UseSerilogRequestLogging()
                 .UseHttpsRedirection()
                 .UseRouting()
                 .UseAuthentication()
@@ -76,8 +77,8 @@ namespace Library.API
             using var context = scope.ServiceProvider.GetService<LibraryDBContext>();
             MigrateLibraryDB(context, logger, 20);
         }
-        
-        private static void MigrateLibraryDB(DbContext context, ILogger logger, int retriesRemaining)
+
+        private static void MigrateLibraryDB(DbContext context, ILogger<Startup> logger, int retriesRemaining)
         {
             try
             {
@@ -85,7 +86,8 @@ namespace Library.API
             }
             catch (SqlException e)
             {
-                logger.LogWarning(e, "Error running migrations on the Library DB. Remaining Retries: {retriesRemaining}", retriesRemaining);
+                logger.LogWarning(e,
+                    "Error running migrations on the Library DB. Remaining Retries: {RetriesRemaining}", retriesRemaining);
                 if (retriesRemaining == 0)
                     throw;
 
