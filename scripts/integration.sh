@@ -6,11 +6,6 @@ if [[ -z "${GIT_HASH}" ]]; then
     exit 1
 fi
 
-if [[ -z "${LIBRARY_API_URL}" ]]; then
-    echo "LIBRARY_API_URL environment variable is not set"
-    exit 1
-fi
-
 current_directory="$PWD"
 
 cd $(dirname $0)/..
