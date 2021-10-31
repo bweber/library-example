@@ -68,6 +68,15 @@ namespace Library.Infrastructure.Modules
                 Protect = true
             });
 
+            // Allow app service access to the database: https://docs.microsoft.com/en-us/rest/api/sql/firewallrules/createorupdate
+            new FirewallRule($"{name}-fw", new FirewallRuleArgs
+            {
+                ServerName = sqlServer.Name,
+                ResourceGroupName = args.ResourceGroupName,
+                StartIpAddress = "0.0.0.0",
+                EndIpAddress = "0.0.0.0"
+            });
+
             new DiagnosticSettingsModule($"{name}-server-diag", new DiagnosticSettingsModuleArgs
             {
                 ResourceId = sqlServer.Id,
