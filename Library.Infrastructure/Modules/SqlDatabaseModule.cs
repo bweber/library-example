@@ -32,6 +32,7 @@ namespace Library.Infrastructure.Modules
 
             var sqlServer = new Server(name, new ServerArgs
             {
+                ServerName = name,
                 ResourceGroupName = args.ResourceGroupName,
                 Location = args.ResourceGroupLocation,
                 AdministratorLogin = adminUsername.Result,

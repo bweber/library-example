@@ -47,6 +47,9 @@ namespace Library.Infrastructure
                 LogAnalyticsWorkspaceId = logAnalyticsWorkspace.Id,
                 AppServicePlanTier = config.Require("appServicePlanTier"),
                 AppServicePlanSize = config.Require("appServicePlanSize")
+            }, new ComponentResourceOptions
+            {
+                DependsOn = logAnalyticsWorkspace
             });
 
             new AppServicePlanAutoscaleModule("library-plan-autoscale",
@@ -60,6 +63,9 @@ namespace Library.Infrastructure
             {
                 LogAnalyticsWorkspaceId = logAnalyticsWorkspace.Id,
                 AppServicePlanId = appServicePlan.Id
+            }, new ComponentResourceOptions
+            {
+                DependsOn = logAnalyticsWorkspace
             });
 
             var keyVault = new KeyVaultModule("library-vault", new KeyVaultModuleArgs(resourceGroup)
@@ -87,6 +93,9 @@ namespace Library.Infrastructure
                         }
                     }
                 }
+            }, new ComponentResourceOptions
+            {
+                DependsOn = logAnalyticsWorkspace
             });
 
             new WebAppApplicationSettings("library-app-settings",
@@ -108,6 +117,9 @@ namespace Library.Infrastructure
             {
                 LogAnalyticsWorkspaceId = logAnalyticsWorkspace.Id,
                 DatabaseSize = config.Require("databaseSize")
+            }, new ComponentResourceOptions
+            {
+                DependsOn = logAnalyticsWorkspace
             });
 
             new Secret("library-sql-connection-string", new SecretArgs

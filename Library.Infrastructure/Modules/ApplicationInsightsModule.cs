@@ -20,6 +20,7 @@ namespace Library.Infrastructure.Modules
         {
             var applicationInsights = new Component(name, new ComponentArgs
             {
+                ResourceName = name,
                 ResourceGroupName = args.ResourceGroupName,
                 Location = args.ResourceGroupLocation,
                 ApplicationType = "web",
