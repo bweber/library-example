@@ -12,7 +12,7 @@ namespace Library.Infrastructure.Modules
     public class AppServicePlanModule : ComponentResource
     {
         [Output("id")]
-        public Output<string> Id { get; }
+        public Output<string> Id { get; set; }
 
         public AppServicePlanModule(string name, AppServicePlanModuleArgs args,
             ComponentResourceOptions? options = null, bool remote = false) :

@@ -12,13 +12,13 @@ namespace Library.Infrastructure.Modules
     public class AppServiceModule : ComponentResource
     {
         [Output("id")]
-        public Output<string> Id { get; }
+        public Output<string> Id { get; set; }
 
         [Output("name")]
-        public Output<string> Name { get; }
+        public Output<string> Name { get; set; }
 
         [Output("principalId")]
-        public Output<string> PrincipalId { get; }
+        public Output<string> PrincipalId { get; set; }
 
         public AppServiceModule(string name, AppServiceModuleArgs args, ComponentResourceOptions options = null,
             bool remote = false) : base("library:components:AppService", name, args, options, remote)

@@ -12,7 +12,7 @@ namespace Library.Infrastructure.Modules
     public class SqlDatabaseModule : ComponentResource
     {
         [Output("connectionString")]
-        public Output<string> ConnectionString { get; }
+        public Output<string> ConnectionString { get; set; }
 
         public SqlDatabaseModule(string name, SqlDatabaseModuleArgs args, ComponentResourceOptions options = null,
             bool remote = false)  : base("library:components:SqlDatabaseModule", name, args, options, remote)

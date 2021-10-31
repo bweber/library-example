@@ -11,10 +11,10 @@ namespace Library.Infrastructure.Modules
     public class KeyVaultModule : ComponentResource
     {
         [Output("id")]
-        public Output<string> Id { get; }
+        public Output<string> Id { get; set; }
 
         [Output("name")]
-        public Output<string> Name { get; }
+        public Output<string> Name { get; set; }
 
         public KeyVaultModule(string name, KeyVaultModuleArgs args,
             ComponentResourceOptions options = null, bool remote = false) :

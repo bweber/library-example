@@ -9,10 +9,10 @@ namespace Library.Infrastructure.Modules
     public class ApplicationInsightsModule : ComponentResource
     {
         [Output("Id")]
-        public Output<string> Id { get; }
+        public Output<string> Id { get; set; }
 
         [Output("instrumentationKey")]
-        public Output<string> InstrumentationKey { get; }
+        public Output<string> InstrumentationKey { get; set; }
 
         public ApplicationInsightsModule(string name, ApplicationInsightsModuleArgs args,
             ComponentResourceOptions options = null, bool remote = false) :

@@ -11,7 +11,7 @@ namespace Library.Infrastructure.Modules
     public class LogAnalyticsWorkspaceModule : ComponentResource
     {
         [Output("id")]
-        public Output<string> Id { get; }
+        public Output<string> Id { get; set; }
 
         public LogAnalyticsWorkspaceModule(string name, LogAnalyticsWorkspaceModuleArgs args,
             ComponentResourceOptions options = null, bool remote = false) :
