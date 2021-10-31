@@ -1,5 +1,5 @@
 config:
-  azure:location: CentralUS
+  azure-native:location: CentralUS
   library-api:logRetentionDays: 30
   library-api:appServicePlanTier: Basic
   library-api:appServicePlanSize: B1
