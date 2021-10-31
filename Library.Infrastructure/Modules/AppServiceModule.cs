@@ -1,56 +1,39 @@
-using System;
-using Pulumi;
-using Pulumi.Azure.AppInsights;
-using Pulumi.Azure.AppService;
-using Pulumi.Azure.AppService.Inputs;
-using Pulumi.Azure.Core;
-using Pulumi.Azure.KeyVault;
-
 // ReSharper disable ObjectCreationAsStatement
+using Pulumi;
+using Pulumi.AzureNative.Resources;
+using Pulumi.AzureNative.Web;
+using Pulumi.AzureNative.Web.Inputs;
+using Deployment = Pulumi.Deployment;
+using ManagedServiceIdentityType = Pulumi.AzureNative.Web.ManagedServiceIdentityType;
+using ResourceArgs = Pulumi.ResourceArgs;
 
 namespace Library.Infrastructure.Modules
 {
     public class AppServiceModule : ComponentResource
     {
+        [Output("id")]
+        public Output<string> Id { get; }
+
         [Output("name")]
-        public Output<string> Name { get; private set; }
+        public Output<string> Name { get; }
 
-        [Output("defaultSiteHostname")]
-        public Output<string> DefaultSiteHostname { get; private set; }
+        [Output("principalId")]
+        public Output<string> PrincipalId { get; }
 
-        public AppServiceModule(string name, AppServiceModuleArgs args, ComponentResourceOptions options = null, bool remote = false)
-            : base("library:components:AppService", name, args, options, remote)
+        public AppServiceModule(string name, AppServiceModuleArgs args, ComponentResourceOptions options = null,
+            bool remote = false) : base("library:components:AppService", name, args, options, remote)
         {
-            var appInsights = new Insights($"{name}-insights", new InsightsArgs
+            var appService = new WebApp(name, new WebAppArgs
             {
                 Location = args.ResourceGroupLocation,
                 ResourceGroupName = args.ResourceGroupName,
-                ApplicationType = "web",
-                Tags =
-                {
-                    { "environment", Deployment.Instance.StackName }
-                }
-            });
-
-            var appService = new AppService(name, new AppServiceArgs
-            {
-                Location = args.ResourceGroupLocation,
-                ResourceGroupName = args.ResourceGroupName,
-                AppServicePlanId = args.AppServicePlanId,
+                ServerFarmId = args.AppServicePlanId,
                 HttpsOnly = true,
-                Identity = new AppServiceIdentityArgs
+                Identity = new ManagedServiceIdentityArgs
                 {
-                    Type = "SystemAssigned"
+                    Type = ManagedServiceIdentityType.SystemAssigned
                 },
-                AppSettings =
-                {
-                    { "WEBSITES_ENABLE_APP_SERVICE_STORAGE", "false" },
-                    { "WEBSITES_CONTAINER_START_TIME_LIMIT", "1800" },
-                    { "ASPNETCORE_ENVIRONMENT", args.AspnetEnvironment },
-                    { "APPINSIGHTS_INSTRUMENTATIONKEY", appInsights.InstrumentationKey },
-                    { "KeyVaultUri", Output.Format($"https://{args.KeyVaultName}.vault.azure.net/") }
-                },
-                SiteConfig = new AppServiceSiteConfigArgs
+                SiteConfig = new SiteConfigArgs
                 {
                     LinuxFxVersion = "DOCKER|microsoft/azure-appservices-go-quickstart",
                     FtpsState = "Disabled",
@@ -61,58 +44,61 @@ namespace Library.Infrastructure.Modules
                 Tags =
                 {
                     { "environment", Deployment.Instance.StackName }
-                },
-                Logs = new AppServiceLogsArgs
+                }
+            });
+
+            new WebAppDiagnosticLogsConfiguration($"{name}-logs", new WebAppDiagnosticLogsConfigurationArgs
+            {
+                HttpLogs = new HttpLogsConfigArgs
                 {
-                    HttpLogs = new AppServiceLogsHttpLogsArgs
+                    FileSystem = new FileSystemHttpLogsConfigArgs
                     {
-                        FileSystem = new AppServiceLogsHttpLogsFileSystemArgs
-                        {
-                            RetentionInDays = 14,
-                            RetentionInMb = 35
-                        }
+                        RetentionInDays = 14,
+                        RetentionInMb = 35
                     }
                 }
             });
 
-            var appServicePrincipalId = appService.Identity.Apply(id =>
-                string.IsNullOrEmpty(id.PrincipalId) ? throw new ArgumentNullException() : id.PrincipalId);
-
-            new AccessPolicy($"{name}-policy", new AccessPolicyArgs
+            new DiagnosticSettingsModule($"{name}-diag", new DiagnosticSettingsModuleArgs
             {
-                KeyVaultId = args.KeyVaultId,
-                TenantId = args.TenantId,
-                ObjectId = appServicePrincipalId,
-                SecretPermissions = { "get", "list" }
+                ResourceId = appService.Id,
+                LogAnalyticsWorkspaceId = args.LogAnalyticsWorkspaceId,
+                LogCategories =
+                {
+                    "AppServiceAntivirusScanAuditLogs",
+                    "AppServiceHTTPLogs",
+                    "AppServiceConsoleLogs",
+                    "AppServiceAppLogs",
+                    "AppServiceFileAuditLogs",
+                    "AppServiceAuditLogs",
+                    "AppServiceIPSecAuditLogs",
+                    "AppServicePlatformLogs"
+                },
+                MetricsCategories = new InputList<string>
+                {
+                    "AllMetrics"
+                }
             });
 
+            Id = appService.Id;
             Name = appService.Name;
-            DefaultSiteHostname = appService.DefaultSiteHostname;
+            PrincipalId = appService.Identity.Apply(i => i.PrincipalId!);
         }
     }
 
     public sealed class AppServiceModuleArgs : ResourceArgs
     {
-        [Input("aspnetEnvironment")]
-        public Input<string> AspnetEnvironment { get; set; } = null!;
-
         [Input("appServicePlanId")]
-        public Input<string> AppServicePlanId { get; set; } = null!;
+        public Input<string> AppServicePlanId { get; init; } = null!;
 
-        [Input("tenantId")]
-        public Input<string> TenantId { get; set; } = null!;
-
-        [Input("keyVaultId")]
-        public Input<string> KeyVaultId { get; set; } = null!;
-
-        [Input("keyVaultName")]
-        public Input<string> KeyVaultName { get; set; } = null!;
+        [Input("logAnalyticsWorkspaceId")]
+        public Input<string> LogAnalyticsWorkspaceId { get; init; } = null!;
 
         [Input("resourceGroupName")]
-        public Input<string> ResourceGroupName { get; set; }
+        public Input<string> ResourceGroupName { get; }
 
         [Input("resourceGroupLocation")]
-        public Input<string> ResourceGroupLocation { get; set; }
+        public Input<string> ResourceGroupLocation { get; }
 
         public AppServiceModuleArgs(ResourceGroup resourceGroup)
         {

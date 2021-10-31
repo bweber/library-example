@@ -1,8 +1,9 @@
 config:
   azure:location: CentralUS
+  library-api:logRetentionDays: 30
   library-api:appServicePlanTier: Basic
   library-api:appServicePlanSize: B1
   library-api:appServiceCapacity: 2
-  library-api:keyvaultSku: standard
   library-api:databaseSize: S0
   library-api:aspnetEnvironment: Development
+  library-api:administratorEmail: brandonmweber@gmail.com

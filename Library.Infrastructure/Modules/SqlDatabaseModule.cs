@@ -1,15 +1,21 @@
+// ReSharper disable ObjectCreationAsStatement
 using Pulumi;
-using Pulumi.Azure.Core;
-using Pulumi.Azure.KeyVault;
-using Pulumi.Azure.Sql;
+using Pulumi.AzureNative.Resources;
+using Pulumi.AzureNative.Sql;
+using Pulumi.AzureNative.Sql.Inputs;
 using Pulumi.Random;
+using Deployment = Pulumi.Deployment;
+using ResourceArgs = Pulumi.ResourceArgs;
 
 namespace Library.Infrastructure.Modules
 {
     public class SqlDatabaseModule : ComponentResource
     {
-        public SqlDatabaseModule(string name, SqlDatabaseModuleArgs args, ComponentResourceOptions options = null, bool remote = false) 
-            : base("library:components:SqlDatabase", name, args, options, remote)
+        [Output("connectionString")]
+        public Output<string> ConnectionString { get; }
+
+        public SqlDatabaseModule(string name, SqlDatabaseModuleArgs args, ComponentResourceOptions options = null,
+            bool remote = false)  : base("library:components:SqlDatabaseModule", name, args, options, remote)
         {
             var adminUsername = new RandomString($"{name}-admin-username", new RandomStringArgs
             {
@@ -24,13 +30,15 @@ namespace Library.Infrastructure.Modules
                 Special = true
             });
 
-            var sqlServer = new SqlServer(name, new SqlServerArgs
+            var sqlServer = new Server(name, new ServerArgs
             {
                 ResourceGroupName = args.ResourceGroupName,
                 Location = args.ResourceGroupLocation,
                 AdministratorLogin = adminUsername.Result,
                 AdministratorLoginPassword = adminPassword.Result,
+                PublicNetworkAccess = ServerPublicNetworkAccess.Enabled,
                 Version = "12.0",
+                MinimalTlsVersion = "1.2",
                 Tags =
                 {
                     { "environment", Deployment.Instance.StackName }
@@ -42,11 +50,14 @@ namespace Library.Infrastructure.Modules
 
             var database = new Database($"{name}-db", new DatabaseArgs
             {
-                Name = "Library",
+                DatabaseName = "Library",
                 ResourceGroupName = args.ResourceGroupName,
                 Location = args.ResourceGroupLocation,
                 ServerName = sqlServer.Name,
-                RequestedServiceObjectiveName = args.DatabaseSize,
+                Sku = new SkuArgs
+                {
+                    Name = args.DatabaseSize
+                },
                 Tags =
                 {
                     { "environment", Deployment.Instance.StackName }
@@ -56,45 +67,75 @@ namespace Library.Infrastructure.Modules
                 Protect = true
             });
 
-            var connectionString =
-                Output.Format($"Server=tcp:{sqlServer.Name}.database.windows.net;Database={database.Name};User Id={adminUsername.Result};Password={adminPassword.Result};");
-            
-            new Secret($"{name}-connection-string", new SecretArgs
+            new DiagnosticSettingsModule($"{name}-server-diag", new DiagnosticSettingsModuleArgs
             {
-                Name = "ConnectionStrings--LibraryDB",
-                KeyVaultId = args.KeyVaultId,
-                Value = connectionString,
-                Tags =
+                ResourceId = sqlServer.Id,
+                LogAnalyticsWorkspaceId = args.LogAnalyticsWorkspaceId,
+                MetricsCategories = new InputList<string>
                 {
-                    { "environment", Deployment.Instance.StackName }
+                    "AllMetrics"
                 }
             });
 
-            // Allow app service access to the database: https://docs.microsoft.com/en-us/rest/api/sql/firewallrules/createorupdate
-            new FirewallRule($"{name}-fw", new FirewallRuleArgs
+            new DiagnosticSettingsModule($"{name}-db-diag", new DiagnosticSettingsModuleArgs
             {
-                ResourceGroupName = args.ResourceGroupName,
-                ServerName = sqlServer.Name,
-                StartIpAddress = "0.0.0.0",
-                EndIpAddress = "0.0.0.0"
+                ResourceId = database.Id,
+                LogAnalyticsWorkspaceId = args.LogAnalyticsWorkspaceId,
+                LogCategories =
+                {
+                    "SQLInsights",
+                    "AutomaticTuning",
+                    "QueryStoreRuntimeStatistics",
+                    "QueryStoreWaitStatistics",
+                    "Errors",
+                    "DatabaseWaitStatistics",
+                    "Timeouts",
+                    "Blocks",
+                    "Deadlocks",
+                    "DevOpsOperationsAudit",
+                    "SQLSecurityAuditEvents"
+                },
+                MetricsCategories =
+                {
+                    "Basic",
+                    "InstanceAndAppAdvanced",
+                    "WorkloadManagement"
+                }
             });
+
+            new ExtendedServerBlobAuditingPolicy($"{name}-server-audit-policy", new ExtendedServerBlobAuditingPolicyArgs
+            {
+                ServerName = sqlServer.Name,
+                State = BlobAuditingPolicyState.Enabled,
+                IsAzureMonitorTargetEnabled = true
+            });
+
+            new ExtendedDatabaseBlobAuditingPolicy($"{name}-database-audit-policy", new ExtendedDatabaseBlobAuditingPolicyArgs
+            {
+                DatabaseName = database.Name,
+                State = BlobAuditingPolicyState.Enabled,
+                IsAzureMonitorTargetEnabled = true
+            });
+
+            ConnectionString =
+                Output.Format($"Server=tcp:{sqlServer.Name}.database.windows.net;Database={database.Name};User Id={adminUsername.Result};Password={adminPassword.Result};");
         }
     }
-    
-    public sealed class SqlDatabaseModuleArgs : ResourceArgs 
+
+    public sealed class SqlDatabaseModuleArgs : ResourceArgs
     {
         [Input("databaseSize")]
-        public Input<string> DatabaseSize { get; set; } = null!;
-        
-        [Input("keyVaultId")]
-        public Input<string> KeyVaultId { get; set; } = null!;
-        
+        public Input<string> DatabaseSize { get; init; } = null!;
+
+        [Input("logAnalyticsWorkspaceId")]
+        public Input<string> LogAnalyticsWorkspaceId { get; init; } = null!;
+
         [Input("resourceGroupName")]
-        public Input<string> ResourceGroupName { get; set; }
-        
+        public Input<string> ResourceGroupName { get; }
+
         [Input("resourceGroupLocation")]
-        public Input<string> ResourceGroupLocation { get; set; }
-        
+        public Input<string> ResourceGroupLocation { get; }
+
         public SqlDatabaseModuleArgs(ResourceGroup resourceGroup)
         {
             ResourceGroupName = resourceGroup.Name;

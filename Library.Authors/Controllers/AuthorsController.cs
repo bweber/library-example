@@ -1,9 +1,13 @@
 using System;
 using System.Net.Mime;
+using System.Threading;
 using System.Threading.Tasks;
+using Library.Authors.Errors;
+using Library.Authors.Handlers.Commands;
+using Library.Authors.Handlers.Queries;
 using Library.Authors.Models;
-using Library.Authors.Services;
 using Library.Common;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,23 +17,28 @@ namespace Library.Authors.Controllers
     [ApiController]
     public class AuthorsController : ControllerBase
     {
-        private readonly IAuthorService _authorService;
+        private readonly IMediator _mediator;
 
-        public AuthorsController(IAuthorService authorService)
+        public AuthorsController(IMediator mediator)
         {
-            _authorService = authorService;
+            _mediator = mediator;
         }
-        
-        [HttpGet("{id}")]
+
+        [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById(Guid id)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var author = await _authorService.GetById(id);
-            if (author == null)
-                return NotFound();
-            
-            return Ok(author);
+            var result = await _mediator.Send(new GetAuthorById.Query(id), cancellationToken);
+
+            return result.Match<ActionResult>(
+                Ok,
+                error => error switch
+                {
+                    AuthorNotFound => NotFound(),
+                    _ => Problem()
+                });
         }
 
         [HttpPost]
@@ -37,51 +46,54 @@ namespace Library.Authors.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status303SeeOther)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] AuthorModel authorModel)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Create([FromBody] AuthorModel model, CancellationToken cancellationToken)
         {
-            if (authorModel.Id.HasValue)
-            {
-                var author = await _authorService.GetById(authorModel.Id.Value);
-                if (author != null)
+            var result = await _mediator.Send(new CreateAuthor.Command(model), cancellationToken);
+
+            return result.Match<IActionResult>(
+                author => CreatedAtAction(nameof(GetById), new { id = author.Id }, author),
+                error => error switch
                 {
-                    return new SeeOtherStatusCode(nameof(GetById), null, new { id = authorModel.Id });
-                }
-            }
-
-            var result = await _authorService.Create(authorModel);
-
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+                    AuthorExistsError e => new SeeOtherStatusCode(nameof(GetById), null, new { id = e.AuthorId }),
+                    _ => Problem()
+                });
         }
-        
-        [HttpPut("{id}")]
+
+        [HttpPut("{id:guid}")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Save(Guid id, [FromBody] AuthorModel authorModel)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Update(Guid id, [FromBody] AuthorModel model, CancellationToken cancellationToken)
         {
-            var author = await _authorService.GetById(id);
-            if (author == null)
-                return NotFound();
+            var result = await _mediator.Send(new UpdateAuthor.Command(id, model), cancellationToken);
 
-            authorModel.Id = id;
-            var result = await _authorService.Update(authorModel);
-
-            return Ok(result);
+            return result.Match<ActionResult>(
+                Ok,
+                error => error switch
+                {
+                    AuthorNotFound => NotFound(),
+                    _ => Problem()
+                });
         }
-        
-        [HttpDelete("{id}")]
+
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(Guid id)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            var author = await _authorService.GetById(id);
-            if (author == null)
-                return NotFound();
-            
-            await _authorService.Delete(id);
+            var result = await _mediator.Send(new DeleteAuthor.Command(id), cancellationToken);
 
-            return NoContent();
+            return result.Match<ActionResult>(
+                _ => NoContent(),
+                error => error switch
+                {
+                    AuthorNotFound => NotFound(),
+                    _ => Problem()
+                });
         }
     }
 }
