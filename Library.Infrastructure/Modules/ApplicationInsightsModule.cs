@@ -20,7 +20,7 @@ namespace Library.Infrastructure.Modules
         {
             var applicationInsights = new Component(name, new ComponentArgs
             {
-                ResourceName = args.ResourceGroupName,
+                ResourceGroupName = args.ResourceGroupName,
                 Location = args.ResourceGroupLocation,
                 ApplicationType = "web",
                 Kind = "web",
@@ -38,10 +38,10 @@ namespace Library.Infrastructure.Modules
     public sealed class ApplicationInsightsModuleArgs : ResourceArgs
     {
         [Input("resourceGroupName")]
-        public Input<string> ResourceGroupName { get; set; }
+        public Input<string> ResourceGroupName { get; }
 
         [Input("resourceGroupLocation")]
-        public Input<string> ResourceGroupLocation { get; set; }
+        public Input<string> ResourceGroupLocation { get; }
 
         public ApplicationInsightsModuleArgs(ResourceGroup resourceGroup)
         {

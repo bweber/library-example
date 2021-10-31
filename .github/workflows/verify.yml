@@ -20,14 +20,14 @@ jobs:
 
       - name: Verify
         run: make verify
-        
+
       - name: Login to Github Docker
         uses: docker/login-action@v1
         with:
           registry: docker.pkg.github.com
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Publish Image
         run: |
           docker image tag library-api docker.pkg.github.com/${{ github.repository }}/library-api:latest
@@ -35,7 +35,7 @@ jobs:
 
           docker push docker.pkg.github.com/${{ github.repository }}/library-api:latest
           docker push docker.pkg.github.com/${{ github.repository }}/library-api:${{ github.sha }}
-          
+
   deploy-dev:
     needs: build
     runs-on: ubuntu-latest
@@ -52,18 +52,17 @@ jobs:
         uses: pulumi/action-install-pulumi-cli@v1.0.1
 
       - name: Deploy Infrastructure
-        id: deploy-infra
         run: make setup-infra
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
           PULUMI_STACK: dev
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          
+
       - name: Login via Azure CLI
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
+
       - name: Set Web App Container Settings
         uses: azure/appservice-settings@v1
         with:
@@ -86,7 +85,7 @@ jobs:
                     "slotSetting": false
                 }
             ]
-            
+
       - name: Deploy Application to Dev
         uses: azure/webapps-deploy@v2
         with:
@@ -96,10 +95,8 @@ jobs:
       - name: Azure logout
         run: |
           az logout
-          
+
       - name: Integration Tests
         run: make integration
         env:
-          LIBRARY_API_URL: ${{ steps.deploy-infra.outputs.appServiceUrl }}
           GIT_HASH: ${{ github.sha }}
-        

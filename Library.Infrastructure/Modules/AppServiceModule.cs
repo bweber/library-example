@@ -25,6 +25,7 @@ namespace Library.Infrastructure.Modules
         {
             var appService = new WebApp(name, new WebAppArgs
             {
+                Name = name,
                 Location = args.ResourceGroupLocation,
                 ResourceGroupName = args.ResourceGroupName,
                 ServerFarmId = args.AppServicePlanId,
@@ -49,6 +50,8 @@ namespace Library.Infrastructure.Modules
 
             new WebAppDiagnosticLogsConfiguration($"{name}-logs", new WebAppDiagnosticLogsConfigurationArgs
             {
+                Name = $"{name}-logs",
+                ResourceGroupName = args.ResourceGroupName,
                 HttpLogs = new HttpLogsConfigArgs
                 {
                     FileSystem = new FileSystemHttpLogsConfigArgs

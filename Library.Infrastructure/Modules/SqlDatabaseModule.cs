@@ -105,6 +105,7 @@ namespace Library.Infrastructure.Modules
 
             new ExtendedServerBlobAuditingPolicy($"{name}-server-audit-policy", new ExtendedServerBlobAuditingPolicyArgs
             {
+                ResourceGroupName = args.ResourceGroupName,
                 ServerName = sqlServer.Name,
                 State = BlobAuditingPolicyState.Enabled,
                 IsAzureMonitorTargetEnabled = true
@@ -112,7 +113,9 @@ namespace Library.Infrastructure.Modules
 
             new ExtendedDatabaseBlobAuditingPolicy($"{name}-database-audit-policy", new ExtendedDatabaseBlobAuditingPolicyArgs
             {
+                ResourceGroupName = args.ResourceGroupName,
                 DatabaseName = database.Name,
+                ServerName = sqlServer.Name,
                 State = BlobAuditingPolicyState.Enabled,
                 IsAzureMonitorTargetEnabled = true
             });
