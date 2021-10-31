@@ -25,9 +25,10 @@ namespace Library.Infrastructure.Modules
                 ResourceGroupName = args.ResourceGroupName,
                 Kind = "Linux",
                 Reserved = true,
-                ZoneRedundant = true,
+                ZoneRedundant = args.ZoneRedundant,
                 Sku = new SkuDescriptionArgs
                 {
+                    Name =args.AppServicePlanSize,
                     Tier = args.AppServicePlanTier,
                     Size = args.AppServicePlanSize,
                     Capacity = args.AppServiceCapacity
@@ -62,6 +63,9 @@ namespace Library.Infrastructure.Modules
 
         [Input("appServiceCapacity")]
         public Input<int>? AppServiceCapacity { get; init; } = null;
+
+        [Input("zoneRedundant")]
+        public Input<bool> ZoneRedundant { get; init; } = false;
 
         [Input("logAnalyticsWorkspaceId")]
         public Input<string> LogAnalyticsWorkspaceId { get; init; } = null!;

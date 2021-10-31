@@ -50,7 +50,7 @@ namespace Library.Infrastructure.Modules
 
             new WebAppDiagnosticLogsConfiguration($"{name}-logs", new WebAppDiagnosticLogsConfigurationArgs
             {
-                Name = $"{name}-logs",
+                Name = appService.Name,
                 ResourceGroupName = args.ResourceGroupName,
                 HttpLogs = new HttpLogsConfigArgs
                 {
@@ -68,11 +68,9 @@ namespace Library.Infrastructure.Modules
                 LogAnalyticsWorkspaceId = args.LogAnalyticsWorkspaceId,
                 LogCategories =
                 {
-                    "AppServiceAntivirusScanAuditLogs",
                     "AppServiceHTTPLogs",
                     "AppServiceConsoleLogs",
                     "AppServiceAppLogs",
-                    "AppServiceFileAuditLogs",
                     "AppServiceAuditLogs",
                     "AppServiceIPSecAuditLogs",
                     "AppServicePlatformLogs"

@@ -47,9 +47,6 @@ namespace Library.Infrastructure
                 LogAnalyticsWorkspaceId = logAnalyticsWorkspace.Id,
                 AppServicePlanTier = config.Require("appServicePlanTier"),
                 AppServicePlanSize = config.Require("appServicePlanSize")
-            }, new ComponentResourceOptions
-            {
-                DependsOn = logAnalyticsWorkspace
             });
 
             new AppServicePlanAutoscaleModule("library-plan-autoscale",
@@ -63,9 +60,6 @@ namespace Library.Infrastructure
             {
                 LogAnalyticsWorkspaceId = logAnalyticsWorkspace.Id,
                 AppServicePlanId = appServicePlan.Id
-            }, new ComponentResourceOptions
-            {
-                DependsOn = logAnalyticsWorkspace
             });
 
             var keyVault = new KeyVaultModule("library-vault", new KeyVaultModuleArgs(resourceGroup)
@@ -93,9 +87,6 @@ namespace Library.Infrastructure
                         }
                     }
                 }
-            }, new ComponentResourceOptions
-            {
-                DependsOn = logAnalyticsWorkspace
             });
 
             new WebAppApplicationSettings("library-app-settings",
@@ -113,16 +104,13 @@ namespace Library.Infrastructure
                     },
                 });
 
-            var sqlDatabase = new SqlDatabaseModule("library-sql", new SqlDatabaseModuleArgs(resourceGroup)
+            var sqlDatabase = new SqlDatabaseModule("library-app-sql", new SqlDatabaseModuleArgs(resourceGroup)
             {
                 LogAnalyticsWorkspaceId = logAnalyticsWorkspace.Id,
                 DatabaseSize = config.Require("databaseSize")
-            }, new ComponentResourceOptions
-            {
-                DependsOn = logAnalyticsWorkspace
             });
 
-            new Secret("library-sql-connection-string", new SecretArgs
+            new Secret("library-app-sql-connection-string", new SecretArgs
             {
                 ResourceGroupName = resourceGroup.Name,
                 SecretName = "ConnectionStrings--LibraryDB",
