@@ -101,7 +101,7 @@ namespace Library.Infrastructure
                         { "ASPNETCORE_ENVIRONMENT", config.Require("aspnetEnvironment") },
                         { "APPINSIGHTS_INSTRUMENTATIONKEY", applicationInsights.InstrumentationKey },
                         { "KeyVaultUri", Output.Format($"https://{keyVault.Name}.vault.azure.net/") }
-                    },
+                    }
                 });
 
             var sqlDatabase = new SqlDatabaseModule("library-app-sql", new SqlDatabaseModuleArgs(resourceGroup)
@@ -125,10 +125,10 @@ namespace Library.Infrastructure
                 }
             });
 
-            Setup500Alerts(resourceGroup, config.Require("administratorEmail"), applicationInsights);
+            SetupAlerts(resourceGroup, config.Require("administratorEmail"), applicationInsights);
         }
 
-        private static void Setup500Alerts(ResourceGroup resourceGroup, string administratorEmail,
+        private static void SetupAlerts(ResourceGroup resourceGroup, string administratorEmail,
             ApplicationInsightsModule applicationInsights)
         {
             var actionGroup = new ActionGroup("library-alert-action-group", new ActionGroupArgs
