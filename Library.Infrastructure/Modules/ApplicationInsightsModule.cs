@@ -1,5 +1,5 @@
 using Pulumi;
-using Pulumi.AzureNative.Insights;
+using Pulumi.AzureNative.Insights.V20200202Preview;
 using Pulumi.AzureNative.Resources;
 using Deployment = Pulumi.Deployment;
 using ResourceArgs = Pulumi.ResourceArgs;
@@ -21,10 +21,15 @@ namespace Library.Infrastructure.Modules
             var applicationInsights = new Component(name, new ComponentArgs
             {
                 ResourceName = name,
-                ResourceGroupName = args.ResourceGroupName,
                 Location = args.ResourceGroupLocation,
-                ApplicationType = "web",
-                Kind = "web",
+                ResourceGroupName = args.ResourceGroupName,
+                ApplicationType = args.Type.Apply(x => x),
+                Kind = args.Type,
+                FlowType = "Redfield",
+                IngestionMode = IngestionMode.LogAnalytics,
+                WorkspaceResourceId = args.LogAnalyticsWorkspaceId,
+                PublicNetworkAccessForQuery = PublicNetworkAccessType.Enabled,
+                PublicNetworkAccessForIngestion = PublicNetworkAccessType.Enabled,
                 Tags =
                 {
                     { "environment", Deployment.Instance.StackName }
@@ -38,6 +43,12 @@ namespace Library.Infrastructure.Modules
 
     public sealed class ApplicationInsightsModuleArgs : ResourceArgs
     {
+        [Input("type")]
+        public Input<string> Type { get; set; }
+
+        [Input("logAnalyticsWorkspaceId")]
+        public Input<string> LogAnalyticsWorkspaceId { get; set; } = null!;
+
         [Input("resourceGroupName")]
         public Input<string> ResourceGroupName { get; }
 

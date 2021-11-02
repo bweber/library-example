@@ -40,7 +40,11 @@ namespace Library.Infrastructure
                 });
 
             var applicationInsights = new ApplicationInsightsModule("library-app-insights",
-                new ApplicationInsightsModuleArgs(resourceGroup));
+                new ApplicationInsightsModuleArgs(resourceGroup)
+                {
+                    Type = "web",
+                    LogAnalyticsWorkspaceId = logAnalyticsWorkspace.Id,
+                });
 
             var appServicePlan = new AppServicePlanModule("library-plan", new AppServicePlanModuleArgs(resourceGroup)
             {
