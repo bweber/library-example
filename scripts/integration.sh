@@ -14,7 +14,7 @@ echo "Running integration tests..."
 
 dotnet restore -v=quiet
 dotnet build Library.IntegrationTests/Library.IntegrationTests.csproj --no-restore -c Release -v=minimal
-dotnet test Library.IntegrationTests/Library.IntegrationTests.csproj --no-build --no-restore -c Release -v=normal --logger "console;verbosity=detailed" --filter $TEST_FILTER
+dotnet test Library.IntegrationTests/Library.IntegrationTests.csproj --no-build --no-restore -c Release -v=normal --logger "console;verbosity=detailed"
 
 result=$?
 
