@@ -66,7 +66,7 @@ namespace Library.Infrastructure.Modules
         public Input<string> ActionGroup { get; init; } = null!;
 
         [Input("alertEmailSubject")]
-        public Input<string>? AlertEmailSubject { get; init; } = null;
+        public Input<string> AlertEmailSubject { get; init; } = null;
 
         [Input("alertSeverity")]
         public InputUnion<string, AlertSeverity> AlertSeverity { get; init; } =

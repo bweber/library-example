@@ -5,7 +5,13 @@ current_directory="$PWD"
 
 cd $(dirname $0)/..
 
-docker-compose up -d --build
+export GIT_SHA=$(git rev-parse HEAD)
+
+if [ "$IS_PR_WORKFLOW" != true ] ; then
+  docker-compose up -d --build
+fi
+
+docker-compose up -d
 
 result=$?
 

@@ -7,9 +7,11 @@ cd $(dirname $0)/..
 
 echo "Running acceptance tests..."
 
-export GIT_HASH=$(git rev-parse HEAD)
+export GIT_SHA=$(git rev-parse HEAD)
 
-dotnet test Library.AcceptanceTests/Library.AcceptanceTests.csproj --no-restore --no-build -c Release -v=normal
+dotnet restore -v=quiet
+dotnet build Library.AcceptanceTests/Library.AcceptanceTests.csproj --no-restore -c Release -v=quiet
+dotnet test Library.AcceptanceTests/Library.AcceptanceTests.csproj --no-build -c Release -v=normal --logger "console;verbosity=detailed"
 
 result=$?
 

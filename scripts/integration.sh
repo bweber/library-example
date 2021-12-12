@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-if [[ -z "${GIT_HASH}" ]]; then
-    echo "GIT_HASH environment variable is not set"
+if [[ -z "${GIT_SHA}" ]]; then
+    echo "GIT_SHA environment variable is not set"
     exit 1
 fi
 
@@ -14,7 +14,7 @@ echo "Running integration tests..."
 
 dotnet restore -v=quiet
 dotnet build Library.IntegrationTests/Library.IntegrationTests.csproj --no-restore -c Release -v=minimal
-dotnet test Library.IntegrationTests/Library.IntegrationTests.csproj --no-build --no-restore -c Release -v=normal
+dotnet test Library.IntegrationTests/Library.IntegrationTests.csproj --no-build --no-restore -c Release -v=normal --logger "console;verbosity=detailed" --filter $TEST_FILTER
 
 result=$?
 

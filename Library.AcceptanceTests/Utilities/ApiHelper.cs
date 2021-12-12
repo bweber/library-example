@@ -7,7 +7,7 @@ namespace Library.AcceptanceTests.Utilities
 {
     public static class ApiHelper
     {
-        public const string BaseApiUrl = "http://localhost:5000";
+        public const string BaseApiUrl = "http://localhost:5533";
         
         public static async Task<HttpResponseMessage> Get(string route)
         {

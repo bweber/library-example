@@ -10,7 +10,6 @@ cd $(dirname $0)
 time {
     ./dependencycheck.sh
     ./stopdocker.sh
-    ./build.sh
     ./startdocker.sh
     ./serviceup.sh
     ./acceptance.sh

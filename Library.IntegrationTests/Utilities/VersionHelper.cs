@@ -10,7 +10,7 @@ namespace Library.IntegrationTests.Utilities
     {
         public static async Task WaitForVersion()
         {
-            var latestVersion = Environment.GetEnvironmentVariable("GIT_HASH");
+            var latestVersion = Environment.GetEnvironmentVariable("GIT_SHA");
 
             await Policy
                 .Handle<AssertActualExpectedException>()

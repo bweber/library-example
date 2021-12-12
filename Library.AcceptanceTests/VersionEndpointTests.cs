@@ -11,7 +11,7 @@ namespace Library.AcceptanceTests
         [Fact]
         public async void ShouldReturnAppVersion()
         {
-            var gitHash = Environment.GetEnvironmentVariable("GIT_HASH");
+            var gitHash = Environment.GetEnvironmentVariable("GIT_SHA");
             
             using var httpClient = new HttpClient();
             

@@ -11,7 +11,7 @@ time {
     ./dependencycheck.sh
     ./stopdocker.sh
     ./build.sh
-    ./startdocker.sh
+    IS_PR_WORKFLOW=true ./startdocker.sh
     ./stopservice.sh
 }
 

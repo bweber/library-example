@@ -5,10 +5,11 @@ services:
     container_name: library-api
     image: library-api:latest
     ports:
-      - 5000:80
+      - 5533:80
     build:
       context: .
-      dockerfile: Library.API/Dockerfile
+      args:
+        - GIT_SHA
     depends_on:
       - db
     environment:
@@ -16,7 +17,6 @@ services:
       - ConnectionStrings__LibraryDB=Server=db;Database=Library;User Id=sa;Password=password123!;
   
   db:
-    container_name: library-db
     build:
       context: db
     environment:
