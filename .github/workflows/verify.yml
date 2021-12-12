@@ -16,7 +16,25 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: false
+          load: true
+          tags: library-api:latest
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+
+      - name: Container Scanner
+        uses: Azure/container-scan@v0
+        with:
+          image-name: library-api:latest
 
       - name: Verify
         run: make verify
@@ -36,7 +54,7 @@ jobs:
           docker push docker.pkg.github.com/${{ github.repository }}/library-api:latest
           docker push docker.pkg.github.com/${{ github.repository }}/library-api:${{ github.sha }}
 
-  deploy-dev:
+  deploy:
     needs: build
     runs-on: ubuntu-latest
 
@@ -46,7 +64,14 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
       - name: Setup Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
@@ -55,6 +80,9 @@ jobs:
         run: make setup-infra
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          DOCKER_REGISTRY_SERVER_URL: docker.pkg.github.com/${{ github.repository }}
+          DOCKER_REGISTRY_SERVER_USERNAME: ${{ github.repository_owner }}
+          DOCKER_REGISTRY_SERVER_PASSWORD: ${{ secrets.LIBRARY_PAT }}
           PULUMI_STACK: dev
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
@@ -62,29 +90,6 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Set Web App Container Settings
-        uses: azure/appservice-settings@v1
-        with:
-          app-name: library-app
-          app-settings-json: |
-            [
-                {
-                    "name": "DOCKER_REGISTRY_SERVER_URL",
-                    "value": "docker.pkg.github.com/${{ github.repository }}",
-                    "slotSetting": false
-                },
-                {
-                    "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-                    "value": "${{ github.repository_owner }}",
-                    "slotSetting": false
-                },
-                {
-                    "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
-                    "value": "${{ secrets.LIBRARY_PAT }}",
-                    "slotSetting": false
-                }
-            ]
 
       - name: Deploy Application to Dev
         uses: azure/webapps-deploy@v2
@@ -99,4 +104,4 @@ jobs:
       - name: Integration Tests
         run: make integration
         env:
-          GIT_HASH: ${{ github.sha }}
+          GIT_SHA: ${{ github.sha }}

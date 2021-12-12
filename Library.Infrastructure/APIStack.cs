@@ -104,6 +104,9 @@ namespace Library.Infrastructure
                         { "WEBSITES_CONTAINER_START_TIME_LIMIT", "1800" },
                         { "ASPNETCORE_ENVIRONMENT", config.Require("aspnetEnvironment") },
                         { "APPINSIGHTS_INSTRUMENTATIONKEY", applicationInsights.InstrumentationKey },
+                        { "DOCKER_REGISTRY_SERVER_URL", config.Require("dockerRegistryServerUrl") },
+                        { "DOCKER_REGISTRY_SERVER_USERNAME", config.Require("dockerRegistryServerUsername") },
+                        { "DOCKER_REGISTRY_SERVER_PASSWORD", config.RequireSecret("dockerRegistryServerPassword") },
                         { "KeyVaultUri", Output.Format($"https://{keyVault.Name}.vault.azure.net/") }
                     }
                 });

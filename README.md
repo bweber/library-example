@@ -7,7 +7,7 @@ An example application showing how to use Pulumi, Docker, and Github Actions
 ## Dependencies
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Docker Compose](https://www.docker.com/products/docker-desktop)
-- [.NET 5](https://dotnet.microsoft.com/download/dotnet/5.0)
+- [.NET 6](https://dotnet.microsoft.com/download/dotnet/5.0)
 - [.NET EF Tools](https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Pulumi](https://www.pulumi.com/docs/get-started/install/)

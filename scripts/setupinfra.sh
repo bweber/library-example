@@ -19,9 +19,9 @@ pulumi login
 (pulumi stack init $PULUMI_STACK) || echo "Pulumi $PULUMI_STACK already exists"
 pulumi stack select $PULUMI_STACK
 
-# Examples of setting configuration from CLI
-pulumi config set myConfig "My Config"
-pulumi config set --secret mySecret "My Secret"
+pulumi config set dockerRegistryServerUrl $DOCKER_REGISTRY_SERVER_URL
+pulumi config set dockerRegistryServerUsername $DOCKER_REGISTRY_SERVER_USERNAME
+pulumi config set --secret dockerRegistryServerPassword $DOCKER_REGISTRY_SERVER_PASSWORD
 
 if [ "$IS_PR_WORKFLOW" = true ] ; then
   pulumi preview

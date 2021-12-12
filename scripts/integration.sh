@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-if [[ -z "${GIT_HASH}" ]]; then
-    echo "GIT_HASH environment variable is not set"
+if [[ -z "${GIT_SHA}" ]]; then
+    echo "GIT_SHA environment variable is not set"
     exit 1
 fi
 
