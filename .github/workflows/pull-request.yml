@@ -113,7 +113,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x # security-scan tool does not support .NET 6
-          source-url: https://nuget.pkg.github.com/Basis-Theory/index.json
 
       - name: Security Scan
         run: |
