@@ -36,9 +36,6 @@ jobs:
         with:
           image-name: library-api:latest
 
-      - name: Verify
-        run: make verify
-
       - name: Login to Github Docker
         uses: docker/login-action@v1
         with:

@@ -77,16 +77,6 @@ namespace Library.Infrastructure.Modules
                 EndIpAddress = "0.0.0.0"
             });
 
-            new DiagnosticSettingsModule($"{name}-server-diag", new DiagnosticSettingsModuleArgs
-            {
-                ResourceId = sqlServer.Id,
-                LogAnalyticsWorkspaceId = args.LogAnalyticsWorkspaceId,
-                MetricsCategories = new InputList<string>
-                {
-                    "AllMetrics"
-                }
-            });
-
             new DiagnosticSettingsModule($"{name}-db-diag", new DiagnosticSettingsModuleArgs
             {
                 ResourceId = database.Id,
