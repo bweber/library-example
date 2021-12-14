@@ -24,7 +24,7 @@ pulumi config set dockerRegistryServerUsername $DOCKER_REGISTRY_SERVER_USERNAME
 pulumi config set --secret dockerRegistryServerPassword $DOCKER_REGISTRY_SERVER_PASSWORD
 
 if [ "$IS_PR_WORKFLOW" = true ] ; then
-  pulumi preview
+  pulumi preview --diff
 else
   pulumi up -y
 fi
